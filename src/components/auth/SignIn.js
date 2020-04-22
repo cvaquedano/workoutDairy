@@ -17,8 +17,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/cvaquedano">
+        cvaquedano
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -49,6 +49,10 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const classes = useStyles();
 
+  const onSubmit = e =>{
+    e.preventDefault();
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -59,7 +63,9 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form
+          onSubmit={onSubmit}
+          className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
@@ -102,7 +108,7 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/signUp" variant="body2" >
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

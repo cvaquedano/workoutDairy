@@ -4,7 +4,8 @@ import SignIn from '../src/components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 function App() {
   return (
-    <Router>
+    <div className='form-usuario '>
+      <Router>
       <Switch>
         <Route exact path='/' component={SignIn} />
         <Route exact path='/signUp' component={SignUp} />
@@ -12,6 +13,9 @@ function App() {
       </Switch>
 
     </Router>
+
+    </div>
+    
   );
 }
 
