@@ -21,6 +21,30 @@ code {
   justify-content: center;
 }
 
+.cita {
+  padding: 2rem;
+  background: white;
+  border-bottom: 1px solid #e1e1e1;
+  color: black;
+}
+
+.cita p {
+  font-weight: bold;
+  margin-bottom: .8rem;
+}
+.cita p span {
+  font-weight: normal;
+
+}
+.cita:first-of-type {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+.cita:last-of-type {
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
 btn {
   margin-top: 1rem!important;
 }
