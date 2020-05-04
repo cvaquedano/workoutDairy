@@ -23,8 +23,6 @@ const CheckPointList = () => {
                 key={checkPoint.id}
                 checkPoint={checkPoint}/>
             ))}
-
-
        </div>
     );
 };

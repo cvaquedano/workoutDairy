@@ -5,13 +5,13 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import checkpointContext from '../../context/checkPoint/checkPointContext';
-import CheckPointList from './CheckPointList';
+
 import Error from '../Error';
 
 const CheckPointForm = () => {
 
     const checkPointsContext = useContext(checkpointContext);
-    const {checkPoints, errorCheckPoint, obtenerCheckPoints,agregarCheckPoints,validarCheckPoint} = checkPointsContext;
+    const { checkPoint, errorCheckPoint, obtenerCheckPoints,agregarCheckPoints,validarCheckPoint} = checkPointsContext;
 
     const [checkpoint, setCheckpoint] = useState({
         peso: 0,
@@ -25,6 +25,18 @@ const CheckPointForm = () => {
         obtenerCheckPoints();
         // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        if(checkPoint !== null){
+            setCheckpoint({...checkPoint});
+        } else {
+            setCheckpoint({
+                peso: 0,
+                grasa: 0,
+                cintura:0
+            })
+        }
+    },[checkPoint]);
 
     const onChange = e =>{
         setCheckpoint({

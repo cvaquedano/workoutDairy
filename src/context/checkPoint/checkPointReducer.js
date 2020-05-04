@@ -26,6 +26,24 @@ export default (state, action) => {
                 errorCheckPoint: true
             };
 
+        case CHECKPOINT_ACTUAL:
+            return {
+                ...state,
+                checkPoint: state.checkPoints
+                    .filter(checkPoint =>
+                        checkPoint.id === action.payload
+                        )
+            };
+        case ELIMINAR_CHECKPOINT:
+        return {
+            ...state,
+            checkPoints: state.checkPoints
+                    .filter(checkPoint =>
+                        checkPoint.id !== action.payload
+                        ),
+            checkPoint: null
+        };
+
         default:
             return state;
     }

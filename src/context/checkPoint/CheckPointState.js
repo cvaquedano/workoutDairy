@@ -56,6 +56,20 @@ const CheckPointState = props => {
             payload: checkPointsPreCargado
         });
     };
+
+    const setCheckPoint = (id) => {
+        dispatch({
+            type : CHECKPOINT_ACTUAL,
+            payload: id
+        });
+    };
+
+    const eliminarCheckPoint = (id) => {
+        dispatch({
+            type : ELIMINAR_CHECKPOINT,
+            payload: id
+        });
+    };
     return (
         <checkPointContext.Provider
             value={{
@@ -65,7 +79,9 @@ const CheckPointState = props => {
 
                 obtenerCheckPoints,
                 agregarCheckPoints,
-                validarCheckPoint
+                validarCheckPoint,
+                setCheckPoint,
+                eliminarCheckPoint
             }}
         >
             {props.children}
