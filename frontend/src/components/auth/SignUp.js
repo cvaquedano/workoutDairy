@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,13 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+
+import AlertaContext from '../../context/alertas/alertaContext';
+import AuthContext from '../../context/autentificacion/authContext';
+import Error from '../Error';
+
+
 
 function Copyright() {
   return (
@@ -46,12 +53,83 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+const  SignUp = (props) =>{
+
+    
+    const authContext = useContext(AuthContext);
+    const {autenticado, mensaje, registarUsuario} = authContext;
+    const alertaContext = useContext(AlertaContext);
+    
+    const {alerta, mostrarAlerta} = alertaContext;
+
+
+    useEffect(()=>{
+
+        if(autenticado){
+            props.history.push('/main');
+        }
+        if(mensaje){
+            mostrarAlerta(mensaje.msg, mensaje.categoria);
+        }
+        // eslint-disable-next-line
+    },[mensaje,autenticado,props.history]);
+
+    const [usuario, setUsuario]=useState({
+      email:'',
+      nombre:'',
+      password:'',
+      confirmar:''
+  });
+
+  const {email, nombre, password, confirmar} = usuario;
+
+  const onChange = e => {
+      setUsuario(
+         {
+             ...usuario,
+             [e.target.name] : e.target.value
+
+         }
+      );
+
+  }
+
+
+    const onSubmit =  e => {
+      e.preventDefault();
+
+      if( nombre.trim()=== '' ||
+          email.trim()=== '' ||
+          password.trim()=== '' ||
+          confirmar.trim()=== '' ){
+          mostrarAlerta('Todos los campos son obligatorios', 'alerta-error');
+          return;
+      }
+
+      if(password.length < 6){
+          mostrarAlerta('El password debe ser al menos de 6 caracteres', 'alerta-error');
+          return;
+      }
+
+      if(password !== confirmar) {
+          mostrarAlerta('El password y la confirmacion debe ser igual', 'alerta-error');
+          return;
+      };
+
+      registarUsuario({
+          nombre,
+          email,
+          password
+      })
+    }
+
+
   const classes = useStyles();
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      {alerta ? (<Error mensaje={alerta.msg}/>)  : null}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -59,31 +137,38 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form}
+        noValidate
+        onSubmit={onSubmit}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="nombre"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
+                id="nombre"
                 label="First Name"
                 autoFocus
+                value={nombre}
+                onChange={onChange}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
                 required
                 fullWidth
                 id="lastName"
                 label="Last Name"
-                name="lastName"
+                name="nombre"
                 autoComplete="lname"
+                value={nombre}
+                onChange={onChange}
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -93,6 +178,8 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={onChange}
+                value={email}
               />
             </Grid>
             <Grid item xs={12}>
@@ -105,6 +192,22 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={onChange}
+                value={password}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="confirmar"
+                label="Password"
+                type="password"
+                id="confirmar"
+                autoComplete="current-password"
+                onChange={onChange}
+                value={confirmar}
               />
             </Grid>
             <Grid item xs={12}>
@@ -138,3 +241,5 @@ export default function SignUp() {
     </Container>
   );
 }
+
+export default SignUp;

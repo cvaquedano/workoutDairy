@@ -3,6 +3,7 @@ import { OBTENER_CHECKPOINTS,
     VALIDAR_CHECKPOINT,
     CHECKPOINT_ACTUAL,
     ELIMINAR_CHECKPOINT,
+    CHECKPOINT_ERROR
     } from "../../types";
 
 export default (state, action) => {
@@ -31,7 +32,7 @@ export default (state, action) => {
                 ...state,
                 checkPoint: state.checkPoints
                     .filter(checkPoint =>
-                        checkPoint.id === action.payload
+                        checkPoint._id === action.payload
                         )
             };
         case ELIMINAR_CHECKPOINT:
@@ -39,10 +40,16 @@ export default (state, action) => {
             ...state,
             checkPoints: state.checkPoints
                     .filter(checkPoint =>
-                        checkPoint.id !== action.payload
+                        checkPoint._id !== action.payload
                         ),
             checkPoint: null
         };
+
+        case CHECKPOINT_ERROR:
+            return {
+                ...state,
+                mensaje: action.payload
+            };
 
         default:
             return state;

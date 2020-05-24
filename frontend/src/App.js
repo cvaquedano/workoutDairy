@@ -5,20 +5,38 @@ import SignUp from './components/auth/SignUp';
 import CheckPoint from './components/checkpoint/CheckPointForm';
 import CheckPointList from './components/checkpoint/CheckPointList';
 import CheckPointState from './context/checkPoint/CheckPointState';
+import tokenAuth from './config/tokenAuth';
+import AlertaState from './context/alertas/AlertaState';
+import AuthState from './context/autentificacion/AuthState';
+import RutaPrivada from './components/rutas/RutaPrivada';
+import Main from './components/layout/Main';
+
+const token = localStorage.getItem('token');
+if(token){
+  tokenAuth(token);
+}
+
 function App() {
   return (
-    <div className='form-usuario '>
+    <div >
+      <AuthState>
+      <AlertaState>
       <CheckPointState>
         <Router>
           <Switch>
             <Route exact path='/' component={SignIn} />
             <Route exact path='/signUp' component={SignUp} />
-            <Route exact path='/checkpointForm' component={CheckPoint} />
-            <Route exact path='/checkpointList' component={CheckPointList} />
+            <RutaPrivada exact path='/main' component={Main} />
+            <RutaPrivada exact path='/checkpointForm' component={CheckPoint} />
+            <RutaPrivada exact path='/checkpointList' component={CheckPointList} />
           </Switch>
         </Router>
 
       </CheckPointState>
+</AlertaState>
+      </AuthState>
+      
+      
 
     </div>
 

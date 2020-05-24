@@ -1,29 +1,24 @@
 import React, { useReducer } from 'react';
-import {v4 as uuidv4} from 'uuid';
+//import {v4 as uuidv4} from 'uuid';
 
 import { OBTENER_CHECKPOINTS,
     AGREGAR_CHECKPOINT,
     VALIDAR_CHECKPOINT,
     CHECKPOINT_ACTUAL,
     ELIMINAR_CHECKPOINT,
+    CHECKPOINT_ERROR
     } from "../../types";
 import checkPointReducer from './checkPointReducer';
 import checkPointContext from './checkPointContext';
+import clienteAxios from '../../config/axios';
 
 const CheckPointState = props => {
-    const today = new Date();
-
-    const checkPointsPreCargado = [
-        {id:1, peso:125, grasa: 20, cintura: 45, date : today.getFullYear()+'-'+(today.getMonth()-3)+'-'+today.getDate()},
-        {id:2, peso:127, grasa: 30, cintura: 50, date : today.getFullYear()+'-'+(today.getMonth()-2)+'-'+today.getDate()},
-        {id:3, peso:122, grasa: 40, cintura: 60, date : today.getFullYear()+'-'+(today.getMonth()-1)+'-'+today.getDate()},
-        {id:4, peso:160, grasa: 50, cintura: 70, date : today.getFullYear()+'-'+(today.getMonth())+'-'+today.getDate()},
-    ]
 
     const initialState = {
         checkPoints : [],
        errorCheckPoint:false,
-       checkPoint: null
+       checkPoint: null,
+       mensaje: null
    };
 
    // Dispact para ejecutar las acciones
@@ -31,23 +26,47 @@ const CheckPointState = props => {
 
    const obtenerCheckPoints = () => {
 
+    try {
+        const resultado = await clienteAxios.get('/api/checkPoints');
 
-       dispatch({
-           type : OBTENER_CHECKPOINTS,
-           payload: checkPointsPreCargado
-       });
+        dispatch({
+               type : OBTENER_CHECKPOINTS,
+               payload: resultado.data.checkPoints
+           });
+
+    } catch (error) {
+        const alerta = {
+            msg: 'Hubo un error', // error.response.data.msg,
+            categoria: 'alerta-error'
+        }
+        dispatch({
+            type: CHECKPOINT_ERROR,
+            payload: alerta
+        });
+    }
+
+
 
    };
    const agregarCheckPoints = (checkpoint) => {
 
-        checkpoint.id = uuidv4();
-        const today = new Date();
-        const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-        checkpoint.date = date;
-        dispatch({
-            type : AGREGAR_CHECKPOINT,
-            payload: checkpoint
-        });
+        try {
+            const resultado = await clienteAxios.post('/api/checkpoints', checkpoint);
+
+            dispatch({
+                type:AGREGAR_CHECKPOINT,
+                payload: resultado.data
+            })
+        } catch (error) {
+            const alerta = {
+                msg: 'Hubo un error', // error.response.data.msg,
+                categoria: 'alerta-error'
+            }
+            dispatch({
+                type: CHECKPOINT_ERROR,
+                payload: alerta
+            });
+        }
 
     };
     const validarCheckPoint = () => {
@@ -65,10 +84,25 @@ const CheckPointState = props => {
     };
 
     const eliminarCheckPoint = (id) => {
-        dispatch({
-            type : ELIMINAR_CHECKPOINT,
-            payload: id
-        });
+
+        try {
+            await clienteAxios.delete(`/api/checkpoints/${id}`);
+
+            dispatch({
+                type: ELIMINAR_CHECKPOINT,
+                payload: id
+            });
+
+        } catch (error) {
+            const alerta = {
+                msg: 'Hubo un error', // error.response.data.msg,
+                categoria: 'alerta-error'
+            }
+            dispatch({
+                type: CHECKPOINT_ERROR,
+                payload: alerta
+            });
+        }
     };
     return (
         <checkPointContext.Provider

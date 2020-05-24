@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+
+import AlertaContext from '../../context/alertas/alertaContext';
+import AuthContext from '../../context/autentificacion/authContext';
+
 
 function Copyright() {
   return (
@@ -46,11 +51,53 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
   const classes = useStyles();
 
-  const onSubmit = e =>{
-    e.preventDefault();
+  const alertaContext = useContext(AlertaContext);
+  const {alerta, mostrarAlerta} = alertaContext;
+
+  const authContext = useContext(AuthContext);
+  const {autenticado, mensaje, iniciarSesion} = authContext;
+
+
+  const [usuario, setUsuario]=useState({
+      email:'',
+      password:''
+  });
+
+  const {email, password} = usuario;
+
+  useEffect(()=>{
+
+      if(autenticado){
+          props.history.push('/main');
+      }
+      if(mensaje){
+          mostrarAlerta(mensaje.msg, mensaje.categoria);
+      }
+      // eslint-disable-next-line
+  },[mensaje,autenticado,props.history]);
+
+  const onChange = e => {
+      setUsuario(
+         {
+             ...usuario,
+             [e.target.name] : e.target.value
+
+         }
+      );
+
+  }
+
+  const onSubmit =  e => {
+      e.preventDefault();
+
+      if(email.trim()==='' || password.trim()===''){
+          mostrarAlerta('Todos los campos son obligatorios', 'alerta-error');
+      }
+
+      iniciarSesion({email,password});
   };
 
   return (
@@ -76,6 +123,8 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={onChange}
+            value={email}
           />
           <TextField
             variant="outlined"
@@ -87,6 +136,8 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={onChange}
+            value={password}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
