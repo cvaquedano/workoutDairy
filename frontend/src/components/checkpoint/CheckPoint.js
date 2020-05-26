@@ -9,7 +9,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import checkpointContext from '../../context/checkPoint/checkPointContext';
 
-const CheckPoint = ({checkPoint}) => {
+
+import Moment from 'react-moment';
+
+const CheckPoint = ({checkPoint, props}) => {
 
     const checkPointsContext = useContext(checkpointContext);
     const { setCheckPoint, eliminarCheckPoint} = checkPointsContext;
@@ -24,11 +27,13 @@ const CheckPoint = ({checkPoint}) => {
         setOpen(false);
     };
 
-    const editarCheckPoint = id => {
+    const editarCheckPoint = (id, props) => {
         setCheckPoint(id);
+        props.history.push('/checkpointForm');
     };
     const eliminar = id => {
         eliminarCheckPoint(id);
+        handleClose();
 
     };
 
@@ -38,12 +43,15 @@ const CheckPoint = ({checkPoint}) => {
                 <p>Peso: <span>{checkPoint.peso}</span></p>
                 <p>% Grasa: <span>{checkPoint.grasa}</span></p>
                 <p>Cintura: <span>{checkPoint.cintura}</span></p>
+               
+                <p>Fecha: <span> <Moment format="YYYY/MM/DD">
+                {checkPoint.registro}
+            </Moment></span></p>
 
                 <Button
                     variant="contained"
                     color="primary"
-                    href="/checkpointForm"
-                    onClick={() =>editarCheckPoint(checkPoint.id)}>
+                    onClick={() =>editarCheckPoint(checkPoint._id, props)}>
                     Edit
                 </Button>
 
@@ -70,7 +78,7 @@ const CheckPoint = ({checkPoint}) => {
                     <Button onClick={handleClose} color="primary">
                         No
                     </Button>
-                    <Button onClick={() => eliminar(checkPoint.id)} color="primary" autoFocus>
+                    <Button onClick={() => eliminar(checkPoint._id)} color="primary" autoFocus>
                         Yes
                     </Button>
                     </DialogActions>

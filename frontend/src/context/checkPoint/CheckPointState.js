@@ -4,6 +4,7 @@ import React, { useReducer } from 'react';
 import { OBTENER_CHECKPOINTS,
     AGREGAR_CHECKPOINT,
     VALIDAR_CHECKPOINT,
+    SALVAR_CHECKPOINT,
     CHECKPOINT_ACTUAL,
     ELIMINAR_CHECKPOINT,
     CHECKPOINT_ERROR
@@ -17,14 +18,14 @@ const CheckPointState = props => {
     const initialState = {
         checkPoints : [],
        errorCheckPoint:false,
-       checkPoint: null,
+       checkPointActual: null,
        mensaje: null
    };
 
    // Dispact para ejecutar las acciones
    const [state, dispatch] = useReducer(checkPointReducer,initialState);
 
-   const obtenerCheckPoints = () => {
+   const obtenerCheckPoints = async () => {
 
     try {
         const resultado = await clienteAxios.get('/api/checkPoints');
@@ -37,7 +38,8 @@ const CheckPointState = props => {
     } catch (error) {
         const alerta = {
             msg: 'Hubo un error', // error.response.data.msg,
-            categoria: 'alerta-error'
+            severity: 'error',
+            title: 'Error'
         }
         dispatch({
             type: CHECKPOINT_ERROR,
@@ -48,19 +50,30 @@ const CheckPointState = props => {
 
 
    };
-   const agregarCheckPoints = (checkpoint) => {
+   const agregarCheckPoints = async (checkpoint) => {
 
+        let alerta = {
+            msg: 'Registro Agregado', // error.response.data.msg,
+            severity: 'success',
+            title: 'Success'
+        };
         try {
             const resultado = await clienteAxios.post('/api/checkpoints', checkpoint);
 
+            const payload = {
+                data : resultado.data,
+                alerta : alerta
+            }
+
             dispatch({
                 type:AGREGAR_CHECKPOINT,
-                payload: resultado.data
+                payload
             })
         } catch (error) {
-            const alerta = {
-                msg: 'Hubo un error', // error.response.data.msg,
-                categoria: 'alerta-error'
+            alerta = {
+                msg: 'Hubo un error',
+                severity: 'error',
+                title: 'Error'
             }
             dispatch({
                 type: CHECKPOINT_ERROR,
@@ -69,10 +82,15 @@ const CheckPointState = props => {
         }
 
     };
-    const validarCheckPoint = () => {
+    const validarCheckPoint = (msg) => {
+        const alerta = {
+            msg,
+            severity: 'error',
+            title: 'Error'
+        }
         dispatch({
             type : VALIDAR_CHECKPOINT,
-            payload: checkPointsPreCargado
+            payload: alerta
         });
     };
 
@@ -83,21 +101,67 @@ const CheckPointState = props => {
         });
     };
 
-    const eliminarCheckPoint = (id) => {
+    
+    const salvarCheckPoint = async checkPoint => {
 
+        let alerta = {
+            msg: 'Registro Actualizado',
+            severity: 'success',
+            title: 'Success'
+        };
+
+        try {
+            const resultado = await clienteAxios.put(`/api/checkpoints/${checkPoint._id}`, checkPoint);
+
+            const payload = {
+                data : resultado.data,
+                alerta : alerta
+            }
+
+            dispatch({
+                type:SALVAR_CHECKPOINT,
+                payload
+            })
+        } catch (error) {
+             alerta = {
+                msg: 'Hubo un error',
+                severity: 'error',
+                title: 'Error'
+            }
+            dispatch({
+                type: CHECKPOINT_ERROR,
+                payload: alerta
+            });
+        }
+
+    }
+
+    const eliminarCheckPoint = async (id) => {
+
+        let alerta = {
+            msg: 'Registro Eliminado', // error.response.data.msg,
+            severity: 'success',
+            title: 'Success'
+        }
         try {
             await clienteAxios.delete(`/api/checkpoints/${id}`);
 
+            const payload = {
+                id,
+                alerta : alerta
+            }
+
             dispatch({
                 type: ELIMINAR_CHECKPOINT,
-                payload: id
+                payload
             });
 
         } catch (error) {
-            const alerta = {
+             alerta = {
                 msg: 'Hubo un error', // error.response.data.msg,
-                categoria: 'alerta-error'
-            }
+                severity: 'error',
+                title: 'Error'
+            };
             dispatch({
                 type: CHECKPOINT_ERROR,
                 payload: alerta
@@ -109,12 +173,14 @@ const CheckPointState = props => {
             value={{
                 checkPoints: state.checkPoints,
                 errorCheckPoint : state.errorCheckPoint,
-                checkPoint : state.checkPoint,
+                checkPointActual : state.checkPointActual,
+                mensaje : state.mensaje,
 
                 obtenerCheckPoints,
                 agregarCheckPoints,
                 validarCheckPoint,
                 setCheckPoint,
+                salvarCheckPoint,
                 eliminarCheckPoint
             }}
         >

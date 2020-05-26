@@ -69,7 +69,7 @@ const  SignUp = (props) =>{
             props.history.push('/main');
         }
         if(mensaje){
-            mostrarAlerta(mensaje.msg, mensaje.categoria);
+            mostrarAlerta(mensaje.msg, mensaje.severity, mensaje.title);
         }
         // eslint-disable-next-line
     },[mensaje,autenticado,props.history]);
@@ -129,7 +129,7 @@ const  SignUp = (props) =>{
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      {alerta ? (<Error mensaje={alerta.msg}/>)  : null}
+      {alerta ? (<Error alerta={alerta}/>)  : null}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

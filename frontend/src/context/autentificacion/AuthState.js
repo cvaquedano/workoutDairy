@@ -36,9 +36,10 @@ const AuthState = props  => {
         } catch (error) {
 
             const alerta = {
-                msg: error.response.data.msg,
-                categoria: 'alerta-error'
-            }
+                msg:  error.response.data.msg,
+                severity: 'error',
+                title: 'Error'
+            };
 
             dispatch({
                 type: REGISTRO_ERROR,
@@ -60,10 +61,12 @@ const AuthState = props  => {
                 payload: respuesta.data.usuario
             });
         } catch (error) {
+
             const alerta = {
-                msg: error.response.data.msg,
-                categoria: 'alerta-error'
-            }
+                msg:  error.response.data.msg,
+                severity: 'error',
+                title: 'Error'
+            };
             dispatch({
                 type: LOGIN_ERROR,
                 payload: alerta
@@ -83,9 +86,11 @@ const AuthState = props  => {
             usuarioAutenticado();
 
         } catch (error) {
+            console.log(error.response.data.msg);
             const alerta = {
                 msg: error.response.data.msg,
-                categoria: 'alerta-error'
+                severity: 'error',
+                title: 'Error'
             }
             dispatch({
                 type: LOGIN_ERROR,

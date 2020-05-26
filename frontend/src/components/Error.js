@@ -1,12 +1,14 @@
 import React from 'react';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
-const Error = ({mensaje}) => {
+const Error = ({alerta}) => {
+
+    console.log(alerta);
     return (
         <div>
-            <Alert severity="error">
-        <AlertTitle>Error</AlertTitle>
-        {mensaje}
+            <Alert severity={alerta.severity}>
+        <AlertTitle>{alerta.title}</AlertTitle>
+        {alerta.msg}
       </Alert>
         </div>
     );

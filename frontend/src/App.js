@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import SignIn from '../src/components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
@@ -10,6 +10,9 @@ import AlertaState from './context/alertas/AlertaState';
 import AuthState from './context/autentificacion/AuthState';
 import RutaPrivada from './components/rutas/RutaPrivada';
 import Main from './components/layout/Main';
+import Principal from './components/layout/Principal';
+
+import AuthContext from './context/autentificacion/authContext'
 
 const token = localStorage.getItem('token');
 if(token){
@@ -17,6 +20,7 @@ if(token){
 }
 
 function App() {
+
   return (
     <div >
       <AuthState>
@@ -26,7 +30,7 @@ function App() {
           <Switch>
             <Route exact path='/' component={SignIn} />
             <Route exact path='/signUp' component={SignUp} />
-            <RutaPrivada exact path='/main' component={Main} />
+            <RutaPrivada exact path='/principal' component={Principal} />
             <RutaPrivada exact path='/checkpointForm' component={CheckPoint} />
             <RutaPrivada exact path='/checkpointList' component={CheckPointList} />
           </Switch>
@@ -35,8 +39,7 @@ function App() {
       </CheckPointState>
 </AlertaState>
       </AuthState>
-      
-      
+
 
     </div>
 

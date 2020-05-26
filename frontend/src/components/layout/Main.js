@@ -1,11 +1,9 @@
 import React from 'react';
-import ButtonAppBar from './Bar';
 
-const Main = () => {
+const Main = (props) => {
     return (
         <div>
-            <ButtonAppBar/>
-            
+           
         </div>
     );
 };

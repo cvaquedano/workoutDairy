@@ -17,6 +17,7 @@ import Container from '@material-ui/core/Container';
 import AlertaContext from '../../context/alertas/alertaContext';
 import AuthContext from '../../context/autentificacion/authContext';
 
+import Error from '../Error';
 
 function Copyright() {
   return (
@@ -71,10 +72,11 @@ export default function SignIn(props) {
   useEffect(()=>{
 
       if(autenticado){
-          props.history.push('/main');
+          props.history.push('/principal');
       }
       if(mensaje){
-          mostrarAlerta(mensaje.msg, mensaje.categoria);
+        console.log(mensaje)
+          mostrarAlerta(mensaje.msg, mensaje.severity, mensaje.title);
       }
       // eslint-disable-next-line
   },[mensaje,autenticado,props.history]);
@@ -94,7 +96,8 @@ export default function SignIn(props) {
       e.preventDefault();
 
       if(email.trim()==='' || password.trim()===''){
-          mostrarAlerta('Todos los campos son obligatorios', 'alerta-error');
+          mostrarAlerta('Todos los campos son obligatorios', 'error', 'Error');
+          return;
       }
 
       iniciarSesion({email,password});
@@ -103,6 +106,7 @@ export default function SignIn(props) {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      {alerta ? (<Error alerta={alerta}/>)  : null}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

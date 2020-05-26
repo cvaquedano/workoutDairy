@@ -1,6 +1,7 @@
 import { OBTENER_CHECKPOINTS,
     AGREGAR_CHECKPOINT,
     VALIDAR_CHECKPOINT,
+    SALVAR_CHECKPOINT,
     CHECKPOINT_ACTUAL,
     ELIMINAR_CHECKPOINT,
     CHECKPOINT_ERROR
@@ -17,32 +18,47 @@ export default (state, action) => {
         case AGREGAR_CHECKPOINT:
             return {
                 ...state,
-                checkPoints: [action.payload, ...state.checkPoints],
+                checkPoints: [action.payload.data, ...state.checkPoints],
+                mensaje: action.payload.alerta,
                 errorCheckPoint: false,
+            };
+
+        case SALVAR_CHECKPOINT:
+            return {
+                ...state,
+                checkPoints : state.checkPoints
+                .map(checkPoint =>
+                    checkPoint._id === action.payload.data._id
+                    ? checkPoint : action.payload.data ),
+                    mensaje: action.payload.alerta,
+                    checkPointActual : null
             };
 
         case VALIDAR_CHECKPOINT:
             return {
                 ...state,
-                errorCheckPoint: true
+                errorCheckPoint: true,
+                mensaje: action.payload
             };
 
         case CHECKPOINT_ACTUAL:
+           
             return {
                 ...state,
-                checkPoint: state.checkPoints
+                checkPointActual: state.checkPoints
                     .filter(checkPoint =>
                         checkPoint._id === action.payload
-                        )
+                        )[0]
             };
         case ELIMINAR_CHECKPOINT:
         return {
             ...state,
             checkPoints: state.checkPoints
                     .filter(checkPoint =>
-                        checkPoint._id !== action.payload
+                        checkPoint._id !== action.payload.id
                         ),
-            checkPoint: null
+            mensaje: action.payload.alerta,
+            checkPointActual: null
         };
 
         case CHECKPOINT_ERROR:

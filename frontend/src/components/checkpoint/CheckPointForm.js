@@ -4,6 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
+import AlertaContext from '../../context/alertas/alertaContext';
+
 import checkpointContext from '../../context/checkPoint/checkPointContext';
 
 import Error from '../Error';
@@ -11,7 +13,11 @@ import Error from '../Error';
 const CheckPointForm = () => {
 
     const checkPointsContext = useContext(checkpointContext);
-    const { checkPoint, errorCheckPoint, obtenerCheckPoints,agregarCheckPoints,validarCheckPoint} = checkPointsContext;
+    const { checkPointActual,agregarCheckPoints,salvarCheckPoint,validarCheckPoint, mensaje} = checkPointsContext;
+
+    const alertaContext = useContext(AlertaContext);
+    const {alerta, mostrarAlerta} = alertaContext;
+
 
     const [checkpoint, setCheckpoint] = useState({
         peso: 0,
@@ -19,16 +25,20 @@ const CheckPointForm = () => {
         cintura:0
     });
 
-    const {peso,grasa,cintura} = checkpoint
+
 
     useEffect(() => {
-        obtenerCheckPoints();
+        if(mensaje){
+            mostrarAlerta(mensaje.msg, mensaje.severity, mensaje.title);
+        }
         // eslint-disable-next-line
-    }, []);
+    }, [mensaje]);
 
     useEffect(() => {
-        if(checkPoint !== null){
-            setCheckpoint({...checkPoint});
+        if(checkPointActual !== null){
+
+            setCheckpoint({...checkPointActual});
+
         } else {
             setCheckpoint({
                 peso: 0,
@@ -36,12 +46,14 @@ const CheckPointForm = () => {
                 cintura:0
             })
         }
-    },[checkPoint]);
+    },[checkPointActual]);
+
+    const {peso,grasa,cintura} = checkpoint;
 
     const onChange = e =>{
         setCheckpoint({
             ...checkpoint,
-            [e.target.name] :  parseInt(e.target.value,10)
+            [e.target.name] :  isNaN(e.target.value) ? 0 : parseInt(e.target.value,10)
         });
     }
 
@@ -49,11 +61,16 @@ const CheckPointForm = () => {
         e.preventDefault();
 
         if(peso < 1 || grasa < 1 || cintura < 1 || isNaN(peso)|| isNaN(grasa)||isNaN(cintura) ){
-            validarCheckPoint();
+
+            validarCheckPoint('Los valores deben ser mayor a 0');
             return;
         }
 
-        agregarCheckPoints(checkpoint);
+        if(checkPointActual !== null){
+            salvarCheckPoint(checkpoint);
+        }else{
+            agregarCheckPoints(checkpoint);
+        }
 
         setCheckpoint({
             peso: 0,
@@ -64,12 +81,7 @@ const CheckPointForm = () => {
     return (
 
         <Container component="main" maxWidth="xs">
-             {errorCheckPoint ?
-                <Error
-                    mensaje={'Los valores deben ser mayores que 0'}
-                />
-                :
-                null}
+             {alerta ? (<Error alerta={alerta}/>)  : null}
                     <div>
                         <Typography component="h1" variant="h5">
                         Check point
