@@ -42,7 +42,7 @@ export default (state, action) => {
             };
 
         case CHECKPOINT_ACTUAL:
-           
+
             return {
                 ...state,
                 checkPointActual: state.checkPoints

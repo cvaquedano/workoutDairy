@@ -79,21 +79,15 @@ export default function ButtonAppBar(props) {
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={c.text} />
           </ListItemLink>
-
-
-            // <ListItem button key={text}>
-            //   <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            //   <ListItemText primary={text} />
-            // </ListItem>
           ))}
         </List>
         <Divider />
         <List>
-          {['Registrar Rutina', 'Listar Rutina'].map((text, index) => (
-            <ListItem button key={text}>
+          {[{text:'Registrar Rutina', componente : "/rutinaForm"}, {text:'Listar Rutina', componente : "/rutinaList"}].map((c, index) => (
+            <ListItemLink href={c.componente}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
+              <ListItemText primary={c.text} />
+            </ListItemLink>
           ))}
         </List>
       </div>

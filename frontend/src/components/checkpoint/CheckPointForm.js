@@ -151,9 +151,7 @@ const CheckPointForm = () => {
                                 </Button>
                         </div>
                         </form>
-                    </div> 
-                
-            
+                    </div>
 
         </Container>
     );

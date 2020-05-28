@@ -7,15 +7,15 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import checkpointContext from '../../context/checkPoint/checkPointContext';
+import rutinaContext from '../../context/rutina/rutinaContext';
 
 
 import Moment from 'react-moment';
 
-const CheckPoint = ({checkPoint, props}) => {
+const Rutina = ({rutina, props}) => {
 
-    const checkPointsContext = useContext(checkpointContext);
-    const { setCheckPoint, eliminarCheckPoint} = checkPointsContext;
+    const rutinasContext = useContext(rutinaContext);
+    const { setRutina, eliminarRutina} = rutinasContext;
 
     const [open, setOpen] = useState(false);
 
@@ -27,12 +27,12 @@ const CheckPoint = ({checkPoint, props}) => {
         setOpen(false);
     };
 
-    const editarCheckPoint = (id, props) => {
-        setCheckPoint(id);
-        props.history.push('/checkpointForm');
+    const editarRutina = (id, props) => {
+        setRutina(id);
+        props.history.push('/rutinaForm');
     };
     const eliminar = id => {
-        eliminarCheckPoint(id);
+        eliminarRutina(id);
         handleClose();
 
     };
@@ -40,17 +40,17 @@ const CheckPoint = ({checkPoint, props}) => {
     return (
 
              <div >
-                <p>Peso: <span>{checkPoint.peso}</span></p>
-                <p>% Grasa: <span>{checkPoint.grasa}</span></p>
-                <p>Cintura: <span>{checkPoint.cintura}</span></p>
+                <p>Ejercicio o Maquina: <span>{rutina.nombre}</span></p>
+                <p>Series: <span>{rutina.series}</span></p>
+                <p>Repeticiones o Tiempo: <span>{rutina.repeticiones}</span></p>
                 <p>Fecha: <span> <Moment format="YYYY/MM/DD">
-                {checkPoint.registro}
+                {rutina.registro}
             </Moment></span></p>
 
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() =>editarCheckPoint(checkPoint._id, props)}>
+                    onClick={() =>editarRutina(rutina._id, props)}>
                     Edit
                 </Button>
 
@@ -67,17 +67,17 @@ const CheckPoint = ({checkPoint, props}) => {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{"Delete checkpoint?"}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{"Delete rutina?"}</DialogTitle>
                     <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Si se borra el checkpoint, ya no podra ver este registro en el historico ni graficas.
+                        Si se borra el rutina, ya no podra ver este registro en el historico ni graficas.
                     </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         No
                     </Button>
-                    <Button onClick={() => eliminar(checkPoint._id)} color="primary" autoFocus>
+                    <Button onClick={() => eliminar(rutina._id)} color="primary" autoFocus>
                         Yes
                     </Button>
                     </DialogActions>
@@ -88,4 +88,4 @@ const CheckPoint = ({checkPoint, props}) => {
     );
 };
 
-export default CheckPoint;
+export default Rutina;

@@ -13,6 +13,9 @@ import Main from './components/layout/Main';
 import Principal from './components/layout/Principal';
 
 import AuthContext from './context/autentificacion/authContext'
+import RutinaList from './components/rutina/RutinaList';
+import RutinaForm from './components/rutina/RutinaForm';
+import RutinaState from './context/rutina/RutinaState';
 
 const token = localStorage.getItem('token');
 if(token){
@@ -26,16 +29,19 @@ function App() {
       <AuthState>
       <AlertaState>
       <CheckPointState>
-        <Router>
-          <Switch>
-            <Route exact path='/' component={SignIn} />
-            <Route exact path='/signUp' component={SignUp} />
-            <RutaPrivada exact path='/principal' component={Principal} />
-            <RutaPrivada exact path='/checkpointForm' component={CheckPoint} />
-            <RutaPrivada exact path='/checkpointList' component={CheckPointList} />
-          </Switch>
-        </Router>
-
+        <RutinaState>
+          <Router>
+            <Switch>
+              <Route exact path='/' component={SignIn} />
+              <Route exact path='/signUp' component={SignUp} />
+              <RutaPrivada exact path='/principal' component={Principal} />
+              <RutaPrivada exact path='/checkpointForm' component={CheckPoint} />
+              <RutaPrivada exact path='/checkpointList' component={CheckPointList} />
+              <RutaPrivada exact path='/rutinaForm' component={RutinaForm} />
+              <RutaPrivada exact path='/rutinaList' component={RutinaList} />
+            </Switch>
+          </Router>
+        </RutinaState>
       </CheckPointState>
 </AlertaState>
       </AuthState>
